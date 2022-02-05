@@ -1,0 +1,112 @@
+import { HttpNodeEngine } from './engines/node';
+import { HttpBrowserEngine } from './engines/browser';
+import { Either } from 'fp-ts/Either';
+
+export class HttpClient implements HTTP.HttpClient {
+    #engine: HTTP.HttpEngine;
+    #baseUrl: COMMON.Url;
+    #url: COMMON.Url;
+    #requestOptions: HTTP.RequestOptions = { method: 'get' };
+
+    // TODO init with object
+    constructor(baseUrl: COMMON.Url = '/', engine?: HTTP.HttpEngine) {
+        this.#engine = engine ?? this.#startDefaultEngine();
+        this.#baseUrl = baseUrl;
+        this.#url = this.#baseUrl;
+    }
+
+    #startDefaultEngine(): HTTP.HttpEngine {
+        if (typeof window !== 'undefined') {
+            return new HttpBrowserEngine();
+        }
+        return new HttpNodeEngine();
+    }
+
+	#resolveUrl<T>(url: COMMON.Url = '', searchParams?: T): string {
+		if (url !== '' && url.startsWith('http')) {
+			return this.#buildUrlWithSearchParams(url, searchParams);
+		}
+		if (url !== '' && this.#baseUrl) {
+			if (url.startsWith('/') && this.#baseUrl.startsWith('/')) {
+				return this.#buildUrlWithSearchParams<T>(this.#baseUrl + url.substring(1), searchParams);
+			}
+			return this.#buildUrlWithSearchParams<T>(this.#baseUrl + url, searchParams);
+		}
+		return this.#buildUrlWithSearchParams(this.#baseUrl, searchParams);
+	}
+
+	#buildSearchParams<T>(searchString: string, params: T): string {
+		const searchParams = new URLSearchParams(searchString);
+		if (typeof params === 'string') {
+			if (params.startsWith('?')) {
+				return searchString + params.substring(1);
+			}
+			return searchString + params;
+		}
+		Object.entries(params).forEach(([k, v]) => {
+			if (Array.isArray(v)) {
+				v.forEach((vItem) => {
+					searchParams.append(k, vItem);
+				});
+				return;
+			}
+			searchParams.append(k, v as string);
+		});
+		return searchParams.toString();
+	}
+
+	#buildUrlWithSearchParams<T>(url: string, searchParams?: T): string {
+		if (searchParams) {
+			const _url = new URL(url);
+			_url.search = this.#buildSearchParams<T>(_url.search, searchParams);
+			return _url.href;
+		}
+		return url;
+	}
+
+    query<Q extends HTTP.Query>(query: Q): HttpClient {
+        this.#url = this.#buildUrlWithSearchParams(this.#url, query);
+        return this;
+    }
+
+    url(url: COMMON.Url): HttpClient {
+        this.#url = this.#resolveUrl(url);
+        return this;
+    }
+
+    addOptions(options: HTTP.RequestOptions): HttpClient {
+        // TODO deep merge
+        this.#requestOptions = { ...this.#requestOptions, ...options };
+        return this;
+    }
+
+    request<R, B, Q extends HTTP.Query>({ method, body, query }: HTTP.RequestProps<B, Q>): Promise<Either<Error, R>> {
+        if (query) {
+            this.query(query);
+        }
+        this.addOptions({ method });
+        return this.#engine.request(this.#url, this.#requestOptions, body);
+    }
+
+    get<R, Q extends HTTP.Query>(query?: Q): Promise<Either<Error, R>> {
+        return this.request({ method: 'get', query });
+    }
+    head<R>(): Promise<Either<Error, R>> {
+        return this.request({ method: 'head' });
+    }
+    post<R, B>(body?: B): Promise<Either<Error, R>> {
+        return this.request({ method: 'post', body });
+    }
+    put<R, B>(body?: B): Promise<Either<Error, R>> {
+        return this.request({ method: 'put', body });
+    }
+    patch<R, B>(body?: B): Promise<Either<Error, R>> {
+        return this.request({ method: 'patch', body });
+    }
+    delete<R>(): Promise<Either<Error, R>> {
+        return this.request({ method: 'delete' });
+    }
+    options<R>(): Promise<Either<Error, R>> {
+        return this.request({ method: 'options' });
+    }
+}
