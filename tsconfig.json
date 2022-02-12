@@ -1,20 +1,25 @@
 {
-    "compilerOptions": {
-        "target": "esnext",
-        "module": "commonjs",
-        "useDefineForClassFields": true,
-        "moduleResolution": "node",
-        "allowJs": true,
-        "strict": true,
-        "jsx": "preserve",
-        "resolveJsonModule": true,
-        "esModuleInterop": true,
-        "lib": ["esnext", "dom"],
-        "types": ["node", "mocha"],
-        "typeRoots": ["node_modules/@types"],
-        "baseUrl": ".",
-        "outDir": "dist"
-    },
-    "include": ["src/**/*.ts", "src/types/**/*.d.ts"],
-    "exclude": ["node_modules"]
+	"ts-node": {
+		"compilerOptions": {
+			"module": "commonjs"
+		}
+	},
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"useDefineForClassFields": true,
+		"moduleResolution": "node",
+		"allowJs": true,
+		"strict": true,
+		"jsx": "preserve",
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"lib": ["esnext", "dom"],
+		"types": ["node", "mocha"],
+		"typeRoots": ["node_modules/@types"],
+		"baseUrl": ".",
+		"outDir": "compiled"
+	},
+	"include": ["src/**/*.ts", "src/types/**/*.d.ts", "tests/**/*.ts"],
+	"exclude": ["node_modules"]
 }
