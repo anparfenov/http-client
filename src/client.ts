@@ -1,24 +1,13 @@
-import { HttpNodeEngine } from './engines/node';
-import { HttpBrowserEngine } from './engines/browser';
-
 export class HttpClient implements HTTP.HttpClient {
 	#engine: HTTP.HttpEngine;
 	#baseUrl: COMMON.Url;
 	#url: COMMON.Url;
 	#requestOptions: HTTP.RequestOptions = { method: 'get' };
 
-	// TODO init with object
-	constructor(baseUrl: COMMON.Url = '/', engine?: HTTP.HttpEngine) {
-		this.#engine = engine ?? this.#startDefaultEngine();
-		this.#baseUrl = baseUrl;
+	constructor({engine, baseUrl}: HTTP.HttpClientInitProps) {
+		this.#engine = engine;
+		this.#baseUrl = baseUrl ?? '/';
 		this.#url = this.#baseUrl;
-	}
-
-	#startDefaultEngine(): HTTP.HttpEngine {
-		if (typeof window !== 'undefined') {
-			return new HttpBrowserEngine();
-		}
-		return new HttpNodeEngine();
 	}
 
 	#resolveUrl<T>(url: COMMON.Url = '', searchParams?: T): string {

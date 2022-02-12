@@ -1,4 +1,3 @@
-import type { Either } from "fp-ts/Either";
 import { right, left } from "fp-ts/Either";
 
 import { HttpError } from "./error";

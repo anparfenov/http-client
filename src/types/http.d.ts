@@ -60,4 +60,9 @@ export interface HttpClient {
 	options<R>(): ResponseResultPromise<R>;
 }
 
+export type HttpClientInitProps = {
+	engine: HttpEngine,
+	baseUrl?: COMMON.Url
+}
+
 export as namespace HTTP;
