@@ -1,0 +1,11 @@
+{
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"run": "node --experimental-specifier-resolution=node --experimental-modules --no-warnings --loader ts-node/esm index.ts"
+	},
+	"dependencies": {
+		"fp-ts": "^2.11.8",
+		"http-client": "file:../.."
+	}
+}

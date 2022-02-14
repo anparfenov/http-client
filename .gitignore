@@ -1,5 +1,7 @@
 /dist
 /node_modules
+/demo/node/node_modules
+/demo/browser/node_modules
 
 /tests/browser/run-bundle.mjs
 

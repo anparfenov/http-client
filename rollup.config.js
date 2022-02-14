@@ -15,7 +15,8 @@ export default [{
 			format: 'amd',
 		},
 	],
-	plugins: [typescript(), nodeResolve()]
+    // for d.ts use tsconfig option
+	plugins: [typescript({ tsconfig: './tsconfig.json' }), nodeResolve()]
 },
 {
 	input: 'src/node.ts',
@@ -26,7 +27,7 @@ export default [{
 			name: 'run-tests-bundle'
 		}
 	],
-	plugins: [typescript(), nodeResolve(), commonjs()]
+	plugins: [typescript({ tsconfig: './tsconfig.json' }), nodeResolve(), commonjs()]
 },
 {
 	input: 'tests/browser/run.mjs',

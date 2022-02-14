@@ -1,10 +1,13 @@
+import type * as HTTP from './types/http';
+import type * as COMMON from './types/common';
+
 export class HttpClient implements HTTP.HttpClient {
 	#engine: HTTP.HttpEngine;
 	#baseUrl: COMMON.Url;
 	#url: COMMON.Url;
 	#requestOptions: HTTP.RequestOptions = { method: 'get' };
 
-	constructor({engine, baseUrl}: HTTP.HttpClientInitProps) {
+	constructor({ engine, baseUrl }: HTTP.HttpClientInitProps) {
 		this.#engine = engine;
 		this.#baseUrl = baseUrl ?? '/';
 		this.#url = this.#baseUrl;
@@ -62,7 +65,7 @@ export class HttpClient implements HTTP.HttpClient {
 		return this;
 	}
 
-	addOptions(options: HTTP.RequestOptions): HttpClient {
+	addOptions(options: HTTP.RequestOptionsProps): HttpClient {
 		// TODO deep merge
 		this.#requestOptions = { ...this.#requestOptions, ...options };
 		return this;

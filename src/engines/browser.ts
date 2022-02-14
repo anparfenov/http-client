@@ -2,8 +2,9 @@ import { right, left } from "fp-ts/Either";
 
 import { HttpError } from "./error";
 import { ResponseType } from "./common";
+import type * as HTTP from "../types/http";
+import type * as COMMON from "../types/common";
 
-// TODO: maybe use it as singleton???
 export class HttpBrowserEngine implements HTTP.HttpEngine {
 	#adaptOptions(options: HTTP.RequestOptions): RequestInit {
 		return {
@@ -12,7 +13,7 @@ export class HttpBrowserEngine implements HTTP.HttpEngine {
 		};
 	}
 
-	#getContentType(headers: Headers): HTTP.ResponseType {
+	#getContentType(headers: Headers): ResponseType {
 		const contentType = headers.get("content-type");
 		if (contentType) {
 			if (contentType.includes("application/json")) {
@@ -26,7 +27,7 @@ export class HttpBrowserEngine implements HTTP.HttpEngine {
 
 	#adaptHeaders(headers: Headers): HTTP.Headers {
 		let acc: HTTP.Headers = {};
-		headers.forEach(([value, key]) => {
+		headers.forEach((value, key) => {
 			acc[key] = value;
 		})
 		return acc;

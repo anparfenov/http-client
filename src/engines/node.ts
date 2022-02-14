@@ -5,8 +5,8 @@ import { right, left } from "fp-ts/Either";
 
 import { HttpError } from "./error";
 import { ResponseType } from "./common";
-import * as HTTP from "../types/http";
-import * as COMMON from "../types/common";
+import type * as HTTP from "../types/http";
+import type * as COMMON from "../types/common";
 
 
 export class HttpNodeEngine implements HTTP.HttpEngine {
@@ -47,8 +47,8 @@ export class HttpNodeEngine implements HTTP.HttpEngine {
 								message: messageStream.statusMessage ?? "error",
 							});
 						}
-						let responseType: HTTP.ResponseType = ResponseType.TEXT;
-						if (messageStream.headers["content-type"] === "application/json") {
+						let responseType: ResponseType = ResponseType.TEXT;
+						if (messageStream.headers["content-type"] && messageStream.headers["content-type"].includes("application/json")) {
 							responseType = ResponseType.JSON;
 						}
 						let response = "";

@@ -1,17 +1,19 @@
+import type * as COMMON from './common';
 import type { Either } from 'fp-ts/Either';
-type Headers = Record<string, string | string[]>;
 
-declare enum ResponseType {
-	TEXT = 'text',
-	JSON = 'json'
-}
+export type Headers = Record<string, string | string[]>;
 
 export type RequestOptions = {
 	headers?: Headers;
 	method: string;
 };
 
-type RequestProps<B, Q> = {
+export type RequestOptionsProps = {
+	headers?: Headers;
+	method?: string;
+};
+
+export type RequestProps<B, Q> = {
 	body?: B;
 	query?: Q;
 	method: COMMON.Method;
@@ -44,7 +46,7 @@ export type ResultPayload<T> = {
 	response: Response;
 }
 
-type ResponseResultPromise<T> = Promise<Either<Error, ResultPayload<T>>>;
+export type ResponseResultPromise<T> = Promise<Either<Error, ResultPayload<T>>>;
 
 export interface HttpClient {
 	url(url: COMMON.Url): HttpClient;
@@ -64,5 +66,3 @@ export type HttpClientInitProps = {
 	engine: HttpEngine,
 	baseUrl?: COMMON.Url
 }
-
-export as namespace HTTP;

@@ -1,9 +1,4 @@
 {
-	"ts-node": {
-		"compilerOptions": {
-			"module": "commonjs"
-		}
-	},
 	"compilerOptions": {
 		"target": "esnext",
 		"module": "esnext",
@@ -14,12 +9,11 @@
 		"jsx": "preserve",
 		"resolveJsonModule": true,
 		"esModuleInterop": true,
-		"lib": ["esnext", "dom"],
+		"declaration": true,
+		"lib": ["esnext"],
 		"types": ["node"],
 		"typeRoots": ["node_modules/@types"],
-		"baseUrl": ".",
-		"outDir": "dist"
 	},
-	"include": ["src/**/*.ts", "tests/**/*.ts"],
+	"include": ["*"],
 	"exclude": ["node_modules"]
 }

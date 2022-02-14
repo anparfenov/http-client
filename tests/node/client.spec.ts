@@ -21,7 +21,7 @@ NodeClientSuite("should work", async function () {
 	assert.ok(isRight(res));
 });
 
-NodeClientSuite("should return a data on get request", async function () {
+NodeClientSuite("should return a data field on get request", async function () {
 	const client = new HttpClient({
 		engine: new HttpNodeEngine(),
 		baseUrl: "https://localhost:3000",
@@ -36,7 +36,7 @@ NodeClientSuite("should return a data on get request", async function () {
 	}
 });
 
-NodeClientSuite("should return a response on get request", async function () {
+NodeClientSuite("should return a response field on get request", async function () {
 	const client = new HttpClient({
 		engine: new HttpNodeEngine(),
 		baseUrl: "https://localhost:3000",
