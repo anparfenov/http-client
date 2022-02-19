@@ -1,10 +1,8 @@
 import https from "node:https";
 import http from "node:http";
 
-import { right, left } from "fp-ts/Either";
-
 import { HttpError } from "./error";
-import { ResponseType } from "./common";
+import { makeOk, makeError, ResponseType } from "./common";
 import type * as HTTP from "../types/http";
 import type * as COMMON from "../types/common";
 
@@ -81,8 +79,13 @@ export class HttpNodeEngine implements HTTP.HttpEngine {
 					}
 				}
 			);
+			// TODO: we should also write Buffer
 			if (data) {
-				req.write(data);
+				if (typeof data === 'string') {
+					req.write(data);
+				} else {
+					req.write(JSON.stringify(data));
+				}
 			}
 			req.end();
 		});
@@ -95,15 +98,15 @@ export class HttpNodeEngine implements HTTP.HttpEngine {
 		const options = this.#adaptOptions(requestOptions);
 		try {
 			const res = await this.#promisifiedRequest<R>(url, options, data);
-			return right(res);
+			return makeOk(res);
 		} catch (e: unknown) {
 			if (e instanceof HttpError) {
-				return left(e);
+				return makeError(e);
 			}
 			if (e instanceof Error) {
-				return left(e);
+				return makeError(e);
 			}
-			return left(new Error("unknown error"));
+			return makeError(new Error("unknown error"));
 		}
 	}
 }

@@ -1,74 +1,82 @@
 import { rest } from 'msw';
 
 export const handlers = [
-    rest.post('/login', (req, res, ctx) => {
+	rest.get('https://localhost:3000/test', (req, res, ctx) => {
+		return res(
+			ctx.status(200),
+			ctx.json({
+				hello: 'hello'
+			})
+		)
+	}),
 
-        // Persist user's authentication in the session
+	rest.get('https://localhost:3000/not-found', (req, res, ctx) => {
+		return res(
+			ctx.status(404),
+		)
+	}),
 
-        sessionStorage.setItem('is-authenticated', 'true')
+	rest.get('https://localhost:3000/add', (req, res, ctx) => {
+		const { searchParams } = req.url;
+		const a = searchParams.get('a');
+		const b = searchParams.get('b');
 
-        return res(
+		return res(
+			ctx.json({
+				c: Number(a) + Number(b)
+			}),
+			ctx.status(200),
+		)
+	}),
 
-            // Respond with a 200 status code
+	rest.post('https://localhost:3000/add', (req, res, ctx) => {
+		const { a, b } = JSON.parse(req.body as string) as { a: number, b: number };
 
-            ctx.status(200),
+		return res(
+			ctx.json({
+				c: a + b
+			}),
+			ctx.status(200),
+		)
+	}),
 
-        )
+	rest.put('https://localhost:3000/add', (req, res, ctx) => {
+		const { a, b } = JSON.parse(req.body as string) as { a: number, b: number };
 
-    }),
+		return res(
+			ctx.json({
+				c: a + b
+			}),
+			ctx.status(200),
+		)
+	}),
 
-    rest.get('https://localhost:3000/test', (req, res, ctx) => {
-        return res(
-            ctx.status(200),
-            ctx.json({
-                hello: 'hello'
-            })
-        )
-    }),
+	rest.patch('https://localhost:3000/add', (req, res, ctx) => {
+		const { a, b } = JSON.parse(req.body as string) as { a: number, b: number };
 
-    rest.get('https://localhost:3000/not-found', (req, res, ctx) => {
-        return res(
-            ctx.status(404),
-        )
-    }),
+		return res(
+			ctx.json({
+				c: a + b
+			}),
+			ctx.status(200),
+		)
+	}),
 
-    rest.get('/user', (req, res, ctx) => {
+	rest.delete('https://localhost:3000/remove', (req, res, ctx) => {
+		return res (
+			ctx.json({
+				status: 'deleted'
+			}),
+			ctx.status(200),
+		)
+	}),
 
-        // Check if the user is authenticated in this session
+	rest.options('https://localhost:3000/check', (req, res, ctx) => {
+		const accessHeader = req.headers.get('Access-Control-Allow-Origin');
 
-        const isAuthenticated = sessionStorage.getItem('is-authenticated')
-
-        if (!isAuthenticated) {
-
-            // If not authenticated, respond with a 403 error
-
-            return res(
-
-                ctx.status(403),
-
-                ctx.json({
-
-                    errorMessage: 'Not authorized',
-
-                }),
-
-            )
-
-        }
-
-        // If authenticated, return a mocked user details
-
-        return res(
-
-            ctx.status(200),
-
-            ctx.json({
-
-                username: 'admin',
-
-            }),
-
-        )
-
-    }),
+		return res (
+			ctx.set('Access-Control-Allow-Origin', accessHeader ?? ''),
+			ctx.status(204),
+		)
+	}),
 ]

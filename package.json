@@ -1,7 +1,7 @@
 {
 	"name": "http-client",
 	"version": "1.0.0",
-	"description": "http client for the browser and node",
+	"description": "http client for the browser and node, zero deps",
 	"licence": "MIT",
 	"repository": "https://github.com/moody-person/http-client",
 	"scripts": {
@@ -19,14 +19,15 @@
 	"engines": {
 		"node": ">=12"
 	},
-	"keywords": ["http", "xhr", "fetch"],
+	"keywords": [
+		"http",
+		"xhr",
+		"fetch"
+	],
 	"author": {
 		"name": "Andrey Parfenov",
 		"email": "asleeppiano@outlook.com",
 		"url": "andreyparfenov.com"
-	},
-	"dependencies": {
-		"fp-ts": "^2.11.8"
 	},
 	"devDependencies": {
 		"@rollup/plugin-commonjs": "^21.0.1",

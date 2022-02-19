@@ -1,61 +1,69 @@
-import type * as HTTP from './types/http';
-import type * as COMMON from './types/common';
+import type * as HTTP from "./types/http";
+import type * as COMMON from "./types/common";
+import { deepMerge } from "./utils/merge";
 
-export class HttpRequestBuilder<TBody> {
+export class HttpRequestBuilder {
 	#url?: COMMON.Url;
-	#requestOptions: HTTP.RequestOptions = { method: 'get' };
-	#body?: TBody;
-	#query?: URLSearchParams;
+	#requestOptions: HTTP.RequestOptions = { method: "get" };
+	#body?: HTTP.Body;
+	#query?: HTTP.Query;
 
-	addOptions(options: HTTP.RequestOptionsProps): HttpRequestBuilder<TBody> {
-		// TODO deep merge
-		this.#requestOptions = { ...this.#requestOptions, ...options };
+	addOptions(options: HTTP.RequestOptionsProps): HttpRequestBuilder {
+		this.#requestOptions = deepMerge(
+			this.#requestOptions,
+			options
+		) as HTTP.RequestOptions;
 		return this;
 	}
 
-	body(body: TBody): HttpRequestBuilder<TBody> {
+	body(body: HTTP.Body): HttpRequestBuilder {
 		this.#body = body;
 		return this;
 	}
 
-	url(url: COMMON.Url): HttpRequestBuilder<TBody> {
+	url(url: COMMON.Url): HttpRequestBuilder {
 		this.#url = url;
-		return this
+		return this;
 	}
 
-	query(query: URLSearchParams): HttpRequestBuilder<TBody> {
+	query(query: HTTP.Query): HttpRequestBuilder {
 		this.#query = query;
-		return this
+		return this;
 	}
 
-	get(): HttpRequestBuilder<TBody> {
-		return this.addOptions({ method: 'get' });
-	}
-	head(): HttpRequestBuilder<TBody> {
-		return this.addOptions({ method: 'head' });
-	}
-	post(): HttpRequestBuilder<TBody> {
-		return this.addOptions({ method: 'post' });
-	}
-	put(): HttpRequestBuilder<TBody> {
-		return this.addOptions({ method: 'put' });
-	}
-	patch(): HttpRequestBuilder<TBody> {
-		return this.addOptions({ method: 'patch' });
-	}
-	delete(): HttpRequestBuilder<TBody> {
-		return this.addOptions({ method: 'delete' });
-	}
-	options(): HttpRequestBuilder<TBody> {
-		return this.addOptions({ method: 'opitons' });
+	headers(headers: HTTP.Headers): HttpRequestBuilder {
+		this.addOptions({ headers });
+		return this;
 	}
 
-	build(): HTTP.HttpRequest<TBody> {
+	get(): HttpRequestBuilder {
+		return this.addOptions({ method: "get" });
+	}
+	head(): HttpRequestBuilder {
+		return this.addOptions({ method: "head" });
+	}
+	post(): HttpRequestBuilder {
+		return this.addOptions({ method: "post" });
+	}
+	put(): HttpRequestBuilder {
+		return this.addOptions({ method: "put" });
+	}
+	patch(): HttpRequestBuilder {
+		return this.addOptions({ method: "patch" });
+	}
+	delete(): HttpRequestBuilder {
+		return this.addOptions({ method: "delete" });
+	}
+	options(): HttpRequestBuilder {
+		return this.addOptions({ method: "options" });
+	}
+
+	build(): HTTP.HttpRequest {
 		return {
 			url: this.#url,
 			query: this.#query,
 			body: this.#body,
 			requestOptions: this.#requestOptions,
-		}
+		};
 	}
 }

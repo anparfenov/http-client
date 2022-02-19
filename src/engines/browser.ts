@@ -1,7 +1,5 @@
-import { right, left } from "fp-ts/Either";
-
 import { HttpError } from "./error";
-import { ResponseType } from "./common";
+import { makeError, makeOk, ResponseType } from "./common";
 import type * as HTTP from "../types/http";
 import type * as COMMON from "../types/common";
 
@@ -51,7 +49,7 @@ export class HttpBrowserEngine implements HTTP.HttpEngine {
 			const contentType = this.#getContentType(response.headers);
 			const data = await response[contentType]();
 			if (response.ok) {
-				return right({
+				return makeOk({
 					data,
 					response: {
 						headers: this.#adaptHeaders(response.headers),
@@ -67,13 +65,13 @@ export class HttpBrowserEngine implements HTTP.HttpEngine {
 			});
 		} catch (e) {
 			if (e instanceof HttpError) {
-				return left(e);
+				return makeError(e);
 			} else if (e instanceof Error) {
-				return left(e);
+				return makeError(e);
 			} else if (typeof e === "string") {
-				return left(new Error(e));
+				return makeError(new Error(e));
 			}
-			return left(new Error("unknown error"));
+			return makeError(new Error("unknown error"));
 		}
 	}
 }

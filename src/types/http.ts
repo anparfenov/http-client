@@ -1,7 +1,8 @@
 import type * as COMMON from './common';
-import type { Either } from 'fp-ts/Either';
 
 export type Headers = Record<string, string | string[]>;
+export type Query = Record<string, string | number | Array<string | number>>;
+export type Body = Record<string, unknown> | string | Blob | ArrayBuffer;
 
 export type RequestOptions = {
 	headers?: Headers;
@@ -19,8 +20,6 @@ export type RequestProps<B> = {
 	query?: URLSearchParams;
 	method: COMMON.Method;
 }
-
-export type Query = Record<string, string | string[]>;
 
 export interface HttpEngine {
 	request<T extends BodyInit, R>(
@@ -42,16 +41,28 @@ export type Response = {
 	url?: string;
 }
 
-export type ResultPayload<T> = {
-	data: T;
+export type ResultPayload<TData> = {
+	data: TData;
 	response: Response;
 }
 
-export type ResponseResultPromise<T> = Promise<Either<Error, ResultPayload<T>>>;
+export type Ok<TResult> = {
+	readonly kind: 'ok';
+	readonly result: ResultPayload<TResult>;
+}
+
+export type Failure<TError> = {
+	readonly kind: 'failure';
+	readonly error: TError;
+}
+
+export type Result<TError, TResult> = Failure<TError> | Ok<TResult>;
+
+export type ResponseResultPromise<TData> = Promise<Result<Error, TData>>;
 
 export interface HttpClient {
 	addOptions(options: RequestOptionsProps): HttpClient;
-	send<R, B>(request: HttpRequest<B>): ResponseResultPromise<R>;
+	send<TData>(request: HttpRequest): ResponseResultPromise<TData>;
 }
 
 export type HttpClientInitProps = {
@@ -59,9 +70,9 @@ export type HttpClientInitProps = {
 	baseUrl?: COMMON.Url
 }
 
-export type HttpRequest<TBody> = {
+export type HttpRequest = {
 	url?: COMMON.Url;
 	requestOptions: RequestOptions;
-	body?: TBody;
-	query?: URLSearchParams
+	body?: Body;
+	query?: Query;
 }

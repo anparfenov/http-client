@@ -11,15 +11,15 @@ export class HttpClient implements HTTP.HttpClient {
 		this.#baseUrl = baseUrl ?? '/';
 	}
 
-	#resolveUrl<T>(url: COMMON.Url = '', searchParams?: T): string {
+	#resolveUrl<TQuery>(url: COMMON.Url = '', searchParams?: TQuery): string {
 		if (url !== '' && url.startsWith('http')) {
 			return this.#buildUrlWithSearchParams(url, searchParams);
 		}
 		if (url !== '' && this.#baseUrl) {
 			if (url.startsWith('/') && this.#baseUrl.startsWith('/')) {
-				return this.#buildUrlWithSearchParams<T>(this.#baseUrl + url.substring(1), searchParams);
+				return this.#buildUrlWithSearchParams<TQuery>(this.#baseUrl + url.substring(1), searchParams);
 			}
-			return this.#buildUrlWithSearchParams<T>(this.#baseUrl + url, searchParams);
+			return this.#buildUrlWithSearchParams<TQuery>(this.#baseUrl + url, searchParams);
 		}
 		return this.#buildUrlWithSearchParams(this.#baseUrl, searchParams);
 	}
@@ -59,7 +59,7 @@ export class HttpClient implements HTTP.HttpClient {
 		return this;
 	}
 
-	send<R, B>(request: HTTP.HttpRequest<B>): HTTP.ResponseResultPromise<R> {
+	send<TData>(request: HTTP.HttpRequest): HTTP.ResponseResultPromise<TData> {
 		const url = this.#resolveUrl(request.url, request.query);
 		return this.#engine.request(url, { ...this.#requestOptions, ...request.requestOptions }, request.body);
 	}
