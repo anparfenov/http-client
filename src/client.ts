@@ -4,13 +4,11 @@ import type * as COMMON from './types/common';
 export class HttpClient implements HTTP.HttpClient {
 	#engine: HTTP.HttpEngine;
 	#baseUrl: COMMON.Url;
-	#url: COMMON.Url;
 	#requestOptions: HTTP.RequestOptions = { method: 'get' };
 
 	constructor({ engine, baseUrl }: HTTP.HttpClientInitProps) {
 		this.#engine = engine;
 		this.#baseUrl = baseUrl ?? '/';
-		this.#url = this.#baseUrl;
 	}
 
 	#resolveUrl<T>(url: COMMON.Url = '', searchParams?: T): string {
@@ -55,49 +53,14 @@ export class HttpClient implements HTTP.HttpClient {
 		return url;
 	}
 
-	query<Q extends HTTP.Query>(query: Q): HttpClient {
-		this.#url = this.#buildUrlWithSearchParams(this.#url, query);
-		return this;
-	}
-
-	url(url: COMMON.Url): HttpClient {
-		this.#url = this.#resolveUrl(url);
-		return this;
-	}
-
 	addOptions(options: HTTP.RequestOptionsProps): HttpClient {
 		// TODO deep merge
 		this.#requestOptions = { ...this.#requestOptions, ...options };
 		return this;
 	}
 
-	request<R, B, Q extends HTTP.Query>({ method, body, query }: HTTP.RequestProps<B, Q>): HTTP.ResponseResultPromise<R> {
-		if (query) {
-			this.query(query);
-		}
-		this.addOptions({ method });
-		return this.#engine.request(this.#url, this.#requestOptions, body);
-	}
-
-	get<R, Q extends HTTP.Query>(query?: Q): HTTP.ResponseResultPromise<R> {
-		return this.request({ method: 'get', query });
-	}
-	head<R>(): HTTP.ResponseResultPromise<R> {
-		return this.request({ method: 'head' });
-	}
-	post<R, B>(body?: B): HTTP.ResponseResultPromise<R> {
-		return this.request({ method: 'post', body });
-	}
-	put<R, B>(body?: B): HTTP.ResponseResultPromise<R> {
-		return this.request({ method: 'put', body });
-	}
-	patch<R, B>(body?: B): HTTP.ResponseResultPromise<R> {
-		return this.request({ method: 'patch', body });
-	}
-	delete<R>(): HTTP.ResponseResultPromise<R> {
-		return this.request({ method: 'delete' });
-	}
-	options<R>(): HTTP.ResponseResultPromise<R> {
-		return this.request({ method: 'options' });
+	send<R, B>(request: HTTP.HttpRequest<B>): HTTP.ResponseResultPromise<R> {
+		const url = this.#resolveUrl(request.url, request.query);
+		return this.#engine.request(url, { ...this.#requestOptions, ...request.requestOptions }, request.body);
 	}
 }

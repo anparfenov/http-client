@@ -1,6 +1,6 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { HttpBrowserEngine, HttpClient, isOk, isError } from '../../dist/bundle.esm.js';
+import { HttpBrowserEngine, HttpClient, HttpRequestBuilder, isOk, isError } from '../../dist/bundle.esm.js';
 
 const rest = MockServiceWorker.rest;
 const setupWorker = MockServiceWorker.setupWorker;
@@ -30,7 +30,8 @@ worker.start().then(() => {
 			engine: new HttpBrowserEngine(),
 			baseUrl: "https://localhost:3000",
 		});
-		const res = await client.url('/test').get();
+		const request = new HttpRequestBuilder().url('/test').get().build();
+		const res = await client.send(request);
 		assert.ok(isOk(res));
 	});
 
@@ -39,7 +40,8 @@ worker.start().then(() => {
 			engine: new HttpBrowserEngine(),
 			baseUrl: "https://localhost:3000",
 		});
-		const res = await client.url('/test').get();
+		const request = new HttpRequestBuilder().url('/test').get().build();
+		const res = await client.send(request);
 		if (isOk(res)) {
 			assert.equal(res.right.data, { hello: 'hello' });
 		} else {
@@ -52,7 +54,8 @@ worker.start().then(() => {
 			engine: new HttpBrowserEngine(),
 			baseUrl: "https://localhost:3000",
 		});
-		const res = await client.url('/test').get();
+		const request = new HttpRequestBuilder().url('/test').get().build();
+		const res = await client.send(request);
 		if (isOk(res)) {
 			assert.equal(res.right.response, {
 				status: 200,
@@ -73,7 +76,8 @@ worker.start().then(() => {
 			engine: new HttpBrowserEngine(),
 			baseUrl: "https://localhost:3000",
 		});
-		const res = await client.url('/not-found').get();
+		const request = new HttpRequestBuilder().url('/not-found').get().build();
+		const res = await client.send(request);
 		if (isError(res)) {
 			assert.is(res.left.status, 404);
 		} else {

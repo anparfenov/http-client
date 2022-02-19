@@ -1,9 +1,10 @@
-import { HttpNodeEngine, HttpClient } from 'http-client';
+import { HttpNodeEngine, HttpClient, HttpRequestBuilder } from 'http-client';
 
 const client = new HttpClient({ engine: new HttpNodeEngine() });
 
 async function main() {
-	const res = await client.url('https://www.boredapi.com/api/activity').get();
+	const request = new HttpRequestBuilder().url('https://www.boredapi.com/api/activity').get().build();
+	const res = await client.send(request);
 	console.log('res', res);
 }
 

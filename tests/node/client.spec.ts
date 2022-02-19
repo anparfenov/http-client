@@ -1,10 +1,7 @@
 import { server } from "../../src/mocks/server";
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-// import { expect } from "chai";
-import { HttpNodeEngine, HttpClient, HttpError } from "../../src/node";
-// TODO: add isRight function to the client
-import { isRight, isLeft } from "fp-ts/Either";
+import { HttpNodeEngine, HttpClient, HttpRequestBuilder, HttpError, isOk, isError } from "../../src/node";
 
 const NodeClientSuite = suite('Http client node');
 
@@ -17,8 +14,9 @@ NodeClientSuite("should work", async function () {
 		engine: new HttpNodeEngine(),
 		baseUrl: "https://localhost:3000",
 	});
-	const res = await client.url("/test").get();
-	assert.ok(isRight(res));
+	const request = new HttpRequestBuilder().url('/test').get().build();
+	const res = await client.send(request);
+	assert.ok(isOk(res));
 });
 
 NodeClientSuite("should return a data field on get request", async function () {
@@ -26,10 +24,9 @@ NodeClientSuite("should return a data field on get request", async function () {
 		engine: new HttpNodeEngine(),
 		baseUrl: "https://localhost:3000",
 	});
-	const res = await client
-		.url("/test")
-		.get<Record<string, string>, any>();
-	if (isRight(res)) {
+	const request = new HttpRequestBuilder().url('/test').get().build();
+	const res = await client.send(request);
+	if (isOk(res)) {
 		assert.equal(res.right.data, { hello: "hello" });
 	} else {
 		throw new Error("incorrect");
@@ -41,10 +38,9 @@ NodeClientSuite("should return a response field on get request", async function 
 		engine: new HttpNodeEngine(),
 		baseUrl: "https://localhost:3000",
 	});
-	const res = await client
-		.url("/test")
-		.get<Record<string, string>, any>();
-	if (isRight(res)) {
+	const request = new HttpRequestBuilder().url('/test').get().build();
+	const res = await client.send(request);
+	if (isOk(res)) {
 		assert.equal(res.right.response, {
 			status: 200,
 			statusText: "OK",
@@ -64,8 +60,9 @@ NodeClientSuite("should fail on 404", async function () {
 		engine: new HttpNodeEngine(),
 		baseUrl: "https://localhost:3000",
 	});
-	const res = await client.url("/not-found").get();
-	if (isLeft(res)) {
+	const request = new HttpRequestBuilder().url('/not-found').get().build();
+	const res = await client.send(request);
+	if (isError(res)) {
 		assert.is((res.left as HttpError).status, 404);
 	} else {
 		throw new Error("incorrect");

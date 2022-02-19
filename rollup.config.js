@@ -24,7 +24,6 @@ export default [{
 		{
 			file: 'dist/bundle.node.js',
 			format: 'es',
-			name: 'run-tests-bundle'
 		}
 	],
 	plugins: [typescript({ tsconfig: './tsconfig.json' }), nodeResolve(), commonjs()]

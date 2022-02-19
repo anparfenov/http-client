@@ -13,9 +13,10 @@ export type RequestOptionsProps = {
 	method?: string;
 };
 
-export type RequestProps<B, Q> = {
+export type RequestProps<B> = {
+	url?: COMMON.Url;
 	body?: B;
-	query?: Q;
+	query?: URLSearchParams;
 	method: COMMON.Method;
 }
 
@@ -49,20 +50,18 @@ export type ResultPayload<T> = {
 export type ResponseResultPromise<T> = Promise<Either<Error, ResultPayload<T>>>;
 
 export interface HttpClient {
-	url(url: COMMON.Url): HttpClient;
-	addOptions(options: RequestOptions): HttpClient;
-	query<T extends Query>(query: T): HttpClient;
-	request<R, B, Q extends Query>(requestProps: RequestProps<B, Q>): ResponseResultPromise<R>;
-	get<R, Q extends Query>(query: Q): ResponseResultPromise<R>;
-	head<R>(): ResponseResultPromise<R>;
-	post<R, B>(body: B): ResponseResultPromise<R>;
-	put<R, B>(body: B): ResponseResultPromise<R>;
-	patch<R, B>(body: B): ResponseResultPromise<R>;
-	delete<R>(): ResponseResultPromise<R>;
-	options<R>(): ResponseResultPromise<R>;
+	addOptions(options: RequestOptionsProps): HttpClient;
+	send<R, B>(request: HttpRequest<B>): ResponseResultPromise<R>;
 }
 
 export type HttpClientInitProps = {
 	engine: HttpEngine,
 	baseUrl?: COMMON.Url
+}
+
+export type HttpRequest<TBody> = {
+	url?: COMMON.Url;
+	requestOptions: RequestOptions;
+	body?: TBody;
+	query?: URLSearchParams
 }
