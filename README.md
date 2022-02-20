@@ -1,37 +1,39 @@
 # http-client
 
-http client for browser and node
+http client for browser and node. Use only with es modules.
 
 ## Installing
 
 ``` sh
-npm i http-client
+npm i @asleeppiano/http-client
 ```
 
 ## Usage
 
 - construct http client with browser or node engine
-- build request using `url()` and `get()` methods
+- build request using HttpRequestBuilder
 - send request
 - handle request result with isOk function
 
 ``` javascript
-import { HttpClient, HttpNodeClient, HttpRequestBuilder, isOk } from 'http-client';
+import { HttpClient, HttpNodeEngine, HttpRequestBuilder, isOk } from '@asleeppiano/http-client';
 
 
 async function request() {
-	const client = new HttpClient({ baseUrl: 'https://www.boredapi.com', engine: new HttpNodeClient() });
+	const client = new HttpClient({ baseUrl: 'https://www.boredapi.com', engine: new HttpNodeEngine() });
 	const request = new HttpRequestBuilder().url('/api/activity').get().build();
 	const res = await client.send(request);
 	if (isOk(res)) {
-		return res.result.data;
+        console.log('res: ', res.result);
 	} else {
 		console.error(`Error. status = ${res.status}, message = ${res.message}`);
 	}
 }
 
-request();
+request()
 ```
+
+You can only send body as string for now.
 
 ## API
 
@@ -55,14 +57,14 @@ create http client with provided baseUrl and engine.
 
 `
 request<T extends BodyInit, R>(
-	url: COMMON.Url,
-	requestOptions: RequestOptions,
-	data?: T,
+url: COMMON.Url,
+requestOptions: RequestOptions,
+data?: T,
 ): ResponseResultPromise<R>;
 request<T, R>(
-	url: COMMON.Url,
-	requestOptions: RequestOptions,
-	data?: T,
+url: COMMON.Url,
+requestOptions: RequestOptions,
+data?: T,
 ): ResponseResultPromise<R>;
 `
 

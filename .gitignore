@@ -6,3 +6,4 @@
 /tests/browser/run-bundle.mjs
 
 *.log
+*.tgz
