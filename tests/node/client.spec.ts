@@ -53,7 +53,6 @@ NodeClientSuite(
 			assert.equal(res.result.response, {
 				status: 200,
 				statusText: "OK",
-				url: "",
 				headers: {
 					"content-type": "application/json",
 					"x-powered-by": "msw",
@@ -185,7 +184,7 @@ NodeClientSuite(
 );
 
 NodeClientSuite(
-	"should make opitons request and recieve headers",
+	"should make options request and recieve headers",
 	async function () {
 		const client = new HttpClient({
 			engine: new HttpNodeEngine(),
@@ -193,13 +192,20 @@ NodeClientSuite(
 		});
 		const request = new HttpRequestBuilder()
 			.url("/check")
-			.headers({ 'Access-Control-Allow-Origin': '*' })
+			.headers({ "Access-Control-Allow-Origin": "*" })
 			.options()
 			.build();
 		const res = await client.send(request);
 
 		if (isOk(res)) {
-			assert.equal(res.result.response, { status: 204, statusText: 'No Content', url: '', headers: { 'x-powered-by': 'msw', 'access-control-allow-origin': '*' }});
+			assert.equal(res.result.response, {
+				status: 204,
+				statusText: "No Content",
+				headers: {
+					"x-powered-by": "msw",
+					"access-control-allow-origin": "*",
+				},
+			});
 		} else {
 			throw new Error("incorrect");
 		}

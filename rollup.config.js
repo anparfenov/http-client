@@ -29,12 +29,12 @@ export default [{
 	plugins: [typescript({ tsconfig: './tsconfig.json' }), nodeResolve(), commonjs()]
 },
 {
-	input: 'tests/browser/run.mjs',
+	input: 'tests/browser/run.ts',
 	output: [
 		{
 			file: 'tests/browser/run-bundle.mjs',
 			format: 'iife',
 		}
 	],
-	plugins: [nodeResolve(), commonjs(), json()]
+	plugins: [typescript({ tsconfig: './tsconfig.json' }), nodeResolve(), commonjs(), json()]
 }];

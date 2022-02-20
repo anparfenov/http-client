@@ -42,7 +42,11 @@ export class HttpBrowserEngine implements HTTP.HttpEngine {
 	): HTTP.ResponseResultPromise<R> {
 		let adaptedOptions = this.#adaptOptions(requestOptions);
 		if (data) {
-			adaptedOptions = this.#appendBody(adaptedOptions, data);
+			if (typeof data === 'string') {
+				adaptedOptions = this.#appendBody(adaptedOptions, data);
+			} else {
+				adaptedOptions = this.#appendBody(adaptedOptions, JSON.stringify(data));
+			}
 		}
 		try {
 			const response = await fetch(url, adaptedOptions);
@@ -54,8 +58,7 @@ export class HttpBrowserEngine implements HTTP.HttpEngine {
 					response: {
 						headers: this.#adaptHeaders(response.headers),
 						status: response.status,
-						statusText: response.statusText,
-						url: response.url,
+						statusText: response.statusText
 					},
 				});
 			}

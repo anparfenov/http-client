@@ -38,7 +38,6 @@ export type Response = {
 	headers: Headers;
 	status: number;
 	statusText: string;
-	url?: string;
 }
 
 export type ResultPayload<TData> = {

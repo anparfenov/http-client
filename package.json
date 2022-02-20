@@ -10,7 +10,8 @@
 		"build:lib": "rollup -c",
 		"build:types": "tsc --project tsconfig.declaration.json",
 		"compile": "tsc",
-		"test:node": "NODE_OPTIONS='--experimental-specifier-resolution=node' uvu -r tsm ./tests/node"
+		"test:node": "NODE_OPTIONS='--experimental-specifier-resolution=node' uvu -r tsm ./tests/node",
+		"test:browser": "serve ./tests/browser"
 	},
 	"type": "module",
 	"browser": "./dist/bundle.esm.js",
@@ -39,6 +40,7 @@
 		"msw": "^0.36.8",
 		"prettier": "^2.5.1",
 		"rollup": "^2.67.0",
+		"serve": "^13.0.2",
 		"ts-node": "^10.4.0",
 		"ts-node-dev": "^1.1.8",
 		"tsm": "^2.2.1",

@@ -63,8 +63,7 @@ export class HttpNodeEngine implements HTTP.HttpEngine {
 							response: {
 								headers: this.#adaptHeaders(messageStream.headers),
 								status: messageStream.statusCode ?? 200,
-								statusText: messageStream.statusMessage ?? "Ok",
-								url: messageStream.url,
+								statusText: messageStream.statusMessage ?? "Ok"
 							},
 						});
 					} catch (e) {
