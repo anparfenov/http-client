@@ -24,7 +24,7 @@ async function request() {
 	const request = new HttpRequestBuilder().url('/api/activity').get().build();
 	const res = await client.send(request);
 	if (isOk(res)) {
-		return result.data;
+		return res.result.data;
 	} else {
 		console.error(`Error. status = ${res.status}, message = ${res.message}`);
 	}
@@ -66,27 +66,28 @@ request<T, R>(
 ): ResponseResultPromise<R>;
 `
 
-makes request with provided url, request options, and some data.
+make request with provided url, request options, and some data.
 
 ### HttpRequestBuilder
 
-`addOptions(options: HTTP.RequestOptionsProps): HttpRequestBuilder<TBody>`
-`body(body: TBody): HttpRequestBuilder<TBody>`
-`url(url: string): HttpRequestBuilder<TBody>`
-`query(query: URLSearchParams): HttpRequestBuilder<TBody>`
+`addOptions(options: HTTP.RequestOptionsProps): HttpRequestBuilder`
+`body(body: TBody): HttpRequestBuilder`
+`url(url: string): HttpRequestBuilder`
+`query(query: TQuery): HttpRequestBuilder`
+`headers(headers: Headers): HttpRequestBuilder`
 
 add data to request
 
-`get(): HttpRequestBuilder<TBody>`
-`head(): HttpRequestBuilder<TBody>`
-`post(): HttpRequestBuilder<TBody>`
-`put(): HttpRequestBuilder<TBody>`
-`patch(): HttpRequestBuilder<TBody>`
-`delete(): HttpRequestBuilder<TBody>`
-`options(): HttpRequestBuilder<TBody>`
+`get(): HttpRequestBuilder`
+`head(): HttpRequestBuilder`
+`post(): HttpRequestBuilder`
+`put(): HttpRequestBuilder`
+`patch(): HttpRequestBuilder`
+`delete(): HttpRequestBuilder`
+`options(): HttpRequestBuilder`
 
 set a method
 
-`build(): HTTP.HttpRequest<TBody>`
+`build(): HTTP.HttpRequest`
 
 returns HttpRequest
