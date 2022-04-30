@@ -6,10 +6,10 @@ import { makeOk, makeError, ResponseType } from "./common";
 import type * as HTTP from "../types/http";
 import type * as COMMON from "../types/common";
 
-
 export class HttpNodeEngine implements HTTP.HttpEngine {
 	#adaptOptions(options: HTTP.RequestOptions): https.RequestOptions {
 		return {
+			...options,
 			method: options.method ?? "get",
 			headers: options.headers,
 		};

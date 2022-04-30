@@ -6,6 +6,7 @@ import type * as COMMON from "../types/common";
 export class HttpBrowserEngine implements HTTP.HttpEngine {
 	#adaptOptions(options: HTTP.RequestOptions): RequestInit {
 		return {
+			...options,
 			method: options.method ?? "get",
 			headers: options.headers as HeadersInit,
 		};

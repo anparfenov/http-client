@@ -8,6 +8,7 @@ export function deepMerge(
 			if (
 				typeof v === "string" ||
 				typeof v === "number" ||
+				typeof v === "function" ||
 				typeof v === "undefined"
 			) {
 				result[k] = obj2[k];
@@ -23,6 +24,7 @@ export function deepMerge(
 			if (
 				typeof v === "string" ||
 				typeof v === "number" ||
+				typeof v === "function" ||
 				typeof v === "undefined"
 			) {
 				if (!result[k]) result[k] = obj1[k];

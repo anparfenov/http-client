@@ -36,25 +36,25 @@ export class HttpRequestBuilder {
 		return this;
 	}
 
-	get(): HttpRequestBuilder {
+	get(): Omit<HttpRequestBuilder, COMMON.Method> {
 		return this.addOptions({ method: "get" });
 	}
-	head(): HttpRequestBuilder {
+	head(): Omit<HttpRequestBuilder, COMMON.Method> {
 		return this.addOptions({ method: "head" });
 	}
-	post(): HttpRequestBuilder {
+	post(): Omit<HttpRequestBuilder, COMMON.Method> {
 		return this.addOptions({ method: "post" });
 	}
-	put(): HttpRequestBuilder {
+	put(): Omit<HttpRequestBuilder, COMMON.Method> {
 		return this.addOptions({ method: "put" });
 	}
-	patch(): HttpRequestBuilder {
+	patch(): Omit<HttpRequestBuilder, COMMON.Method> {
 		return this.addOptions({ method: "patch" });
 	}
-	delete(): HttpRequestBuilder {
+	delete(): Omit<HttpRequestBuilder, COMMON.Method> {
 		return this.addOptions({ method: "delete" });
 	}
-	options(): HttpRequestBuilder {
+	options(): Omit<HttpRequestBuilder, COMMON.Method> {
 		return this.addOptions({ method: "options" });
 	}
 

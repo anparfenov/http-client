@@ -45,7 +45,6 @@ const handlers = [
 			a: number;
 			b: number;
 		};
-		console.log('POST add', a, b);
 
 		return res(
 			ctx.json({
